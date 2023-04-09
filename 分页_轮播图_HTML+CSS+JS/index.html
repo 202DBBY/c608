@@ -1,0 +1,132 @@
+
+
+<html>
+<head>
+<style>
+  .container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .image {
+    width: 200px;
+    height: 200px;
+    margin: 10px;
+  }
+
+  .pagination {
+    display: flex;
+    justify-content: center;
+    margin: 20px;
+  }
+
+  .page {
+    padding: 10px;
+    cursor: pointer;
+  }
+
+  .active {
+    background-color: lightblue;
+  }
+</style>
+<script>
+  // 获取元素
+  var container = document.getElementById("container");
+  var prev = document.getElementById("prev");
+  var next = document.getElementById("next");
+  var pages = document.getElementsByClassName("page");
+
+  // 定义变量
+  var currentPage = 1; // 当前页数
+  var pageSize = 4; // 每页显示的图片数
+  var totalPage = 5; // 总页数
+  var totalImage = 20; // 总图片数
+
+  // 定义函数
+  // 根据当前页数显示对应的图片
+  function showImages() {
+    // 清空容器
+    container.innerHTML = "";
+    // 计算起始和结束的图片索引
+    var start = (currentPage - 1) * pageSize;
+    var end = Math.min(currentPage * pageSize, totalImage);
+    // 循环创建图片元素并添加到容器中
+    for (var i = start; i < end; i++) {
+      var image = document.createElement("img");
+      image.src = "images/" + (i + 1).toString().padStart(2, "0") + ".jpg";
+      image.className = "image";
+      container.appendChild(image);
+    }
+    // 更新分页状态
+    updatePagination();
+  }
+
+  // 更新分页状态
+  function updatePagination() {
+    // 移除所有分页的激活样式
+    for (var i = 0; i < pages.length; i++) {
+      pages[i].classList.remove("active");
+    }
+    // 给当前分页添加激活样式
+    pages[currentPage - 1].classList.add("active");
+    // 判断是否禁用上一页和下一页按钮
+    prev.disabled = currentPage == 1;
+    next.disabled = currentPage == totalPage;
+  }
+
+  // 添加事件监听器
+  // 上一页按钮点击事件
+  prev.addEventListener("click", function() {
+    // 判断是否可以翻页
+    if (currentPage > 1) {
+      // 当前页数减一
+      currentPage--;
+      // 显示对应的图片
+      showImages();
+    }
+  });
+
+   // 下一页按钮点击事件
+   next.addEventListener("click", function() {
+     // 判断是否可以翻页
+     if (currentPage < totalPage) {
+       // 当前页数加一
+       currentPage++;
+       // 显示对应的图片
+       showImages();
+     }
+   });
+
+   // 分页点击事件
+   for (var i = 0; i < pages.length; i++) {
+     pages[i].addEventListener("click", function() {
+       // 获取点击的分页的文本内容并转换为数字
+       var page = parseInt(this.innerText);
+       // 判断是否与当前页数不同
+       if (page != currentPage) {
+         // 更新当前页数为点击的分页
+         currentPage = page;
+         // 显示对应的图片
+         showImages();
+       }
+     });
+   }
+
+   // 初始化页面，显示第一页的图片
+   showImages();
+</script>
+</head>
+<body>
+<div id="container" class="container"></div>
+<div class="pagination">
+<button id="prev">上一页</button>
+<span class="page">1</span>
+<span class="page">2</span>
+<span class="page">3</span>
+<span class="page">4</span>
+<span class="page">5</span>
+<button id="next">下一页</button>
+</div>
+</body>
+</html>
